@@ -1,1 +1,9 @@
-Objective: Gain familiarity with Django by setting up a Django development environment and creating a basic Django project. This task aims to introduce you to the workflow of Django projects, including project creation and running the development server.
+# LibraryProject — Django Introduction
+
+This project is part of the **ALX Django Learn Lab**, under the module **Introduction to Django**.  
+It serves as a foundational exercise for setting up and understanding the structure of a Django project.
+
+---
+
+## Project Structure
+
