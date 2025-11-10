@@ -1,16 +1,17 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
-author = Author.objects.get(name="J.K. Rowling")  # get that author object
-books_by_author = author.books.all()  # use related_name to get all books
-print("Books by author:", list(books_by_author))
-#or Book.objects.filter(author__name="J.K. Rowling")
+#Query all books by a specific author
+author_name = "J.K. Rowling"
+author = Author.objects.get(name=author_name)
+books_by_author = author.books.all()
+print(f"Books by {author_name}: {[book.title for book in books_by_author]}")
 
+#List all books in a library
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)  
+books_in_library = library.books.all()
+print(f"Books in {library_name}: {[book.title for book in books_in_library]}")
 
-library = Library.objects.get(name="Central Library")
-books_in_library = library.books.all()  # ManyToManyField reverse access
-# or from book>libraries : book.libraries.all()
-print("Books in library:", list(books_in_library))
-
-librarian = library.librarian
-print(f"Librarian for {library.name}: {librarian.name}")
-
+#Retrieve the librarian for a library
+librarian = Librarian.objects.get(library=library)
+print(f"Librarian for {library_name}: {librarian.name}")
