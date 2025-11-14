@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from  relationship_app.models import Book
 from django.http import HttpResponseRedirect
 from .models import Library
@@ -21,6 +21,18 @@ class SignUpView(CreateView):
         login(self.request, user)  # ← THIS IS WHAT THE CHECKER WANTS TO SEE
         # Redirect to a success page (change from 'login' to your main page)
         return HttpResponseRedirect(reverse_lazy('book_list'))
+    
+    
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # ← This uses the login function
+            return redirect('book_list')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 def list_books(request):
     all_books = Book.objects.all()
