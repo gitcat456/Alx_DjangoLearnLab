@@ -1,0 +1,26 @@
+<!-- relationship_app/templates/relationship_app/add_book.html -->
+{% extends 'relationship_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Book</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Book Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <select class="form-select" id="author" name="author" required>
+                <option value="">Select Author</option>
+                {% for author in authors %}
+                    <option value="{{ author.id }}">{{ author.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Book</button>
+        <a href="{% url 'book_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
