@@ -1,0 +1,38 @@
+<!-- relationship_app/templates/relationship_app/admin_view.html -->
+{% extends 'relationship_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Admin Dashboard</h2>
+    <div class="alert alert-success">
+        <h4>Welcome, Admin!</h4>
+        <p>You have full administrative privileges.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">User Management</h5>
+                    <p class="card-text">Manage all users and their roles.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">System Settings</h5>
+                    <p class="card-text">Configure library system settings.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reports</h5>
+                    <p class="card-text">View system reports and analytics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!-- relationship_app/templates/relationship_app/member_view.html -->
+{% extends 'relationship_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Member Dashboard</h2>
+    <div class="alert alert-warning">
+        <h4>Welcome, Member!</h4>
+        <p>Browse and borrow books from our library.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Browse Books</h5>
+                    <p class="card-text">Explore our collection of books.</p>
+                    <a href="{% url 'book_list' %}" class="btn btn-primary">View All Books</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">My Account</h5>
+                    <p class="card-text">View your borrowed books and account details.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

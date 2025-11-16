@@ -1,0 +1,30 @@
+<!-- relationship_app/templates/relationship_app/librarian_view.html -->
+{% extends 'relationship_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Librarian Dashboard</h2>
+    <div class="alert alert-info">
+        <h4>Welcome, Librarian!</h4>
+        <p>You can manage books and library operations.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Book Management</h5>
+                    <p class="card-text">Add, edit, or remove books from the library.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Member Services</h5>
+                    <p class="card-text">Assist members with book checkouts and returns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
