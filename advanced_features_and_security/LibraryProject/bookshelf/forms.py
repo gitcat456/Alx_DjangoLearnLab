@@ -1,4 +1,4 @@
-# bookshelf/forms.py
+# LibraryProject/bookshelf/forms.py
 
 from django import forms
 from .models import Book
@@ -15,14 +15,12 @@ class BookForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data.get('title')
-        # Example validation: prevent script tags
         if "<script>" in title.lower():
             raise forms.ValidationError("Invalid characters in title.")
         return title
 
     def clean_author(self):
         author = self.cleaned_data.get('author')
-        # Example validation
         if "<script>" in author.lower():
             raise forms.ValidationError("Invalid characters in author.")
         return author
