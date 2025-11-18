@@ -24,7 +24,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&g*cn_zvg+u!uuzpu1p4bpv@#ihjug2kw7m=^=1zeria!75l+7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # Set only for production. Use True during local development.
+
+# 2. Prevent content type sniffing (blocks malicious MIME types)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+ #3. Enables browser XSS filter (for old browsers)
+SECURE_BROWSER_XSS_FILTER = True
+
+ #4. Prevent your site from being embedded in an iframe (protects against clickjacking)
+X_FRAME_OPTIONS = "DENY"
+
+# 5. Ensure cookies are only sent over HTTPS (production only)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# 6. Recommended headers
+SECURE_HSTS_SECONDS = 31536000        # Enforce HTTPS for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# 7. CSRF trusted origins (adjust to your domain)
+CSRF_TRUSTED_ORIGINS = [
+    "https://yourdomain.com",
+]
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
