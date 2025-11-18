@@ -16,6 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGIN_REDIRECT_URL = 'member_view'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -48,6 +49,9 @@ SECURE_HSTS_PRELOAD = True
 CSRF_TRUSTED_ORIGINS = [
     "https://yourdomain.com",
 ]
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com")
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com")
 
 ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
@@ -66,6 +70,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
