@@ -21,7 +21,7 @@ class Book(models.Model):
     )
 
     def __str__(self):
-        return self.title  # shows the book title
+        return f"{self.title} by {self.author}"   # shows the book title
     
      # ADD META CLASS WITH CUSTOM PERMISSIONS
     class Meta:
