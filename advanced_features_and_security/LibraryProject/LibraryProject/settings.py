@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&g*cn_zvg+u!uuzpu1p4bpv@#ihjug2kw7m=^=1zeria!75l+7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # Set only for production. Use True during local development.
+DEBUG = True # Set only for production. Use True during local development.
 
 # 2. Prevent content type sniffing (blocks malicious MIME types)
 SECURE_CONTENT_TYPE_NOSNIFF = True
