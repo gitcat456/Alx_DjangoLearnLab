@@ -13,6 +13,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
+#Force all connections to HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP → HTTPS
+
+#Ensure cookies are only sent over HTTPS (production only)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+#Recommended headers
+SECURE_HSTS_SECONDS = 31536000        # Enforce HTTPS for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,10 +52,11 @@ X_FRAME_OPTIONS = "DENY"
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-# 6. Recommended headers
-SECURE_HSTS_SECONDS = 31536000        # Enforce HTTPS for 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# Recommended for additional CSRF safety
+CSRF_COOKIE_HTTPONLY = False  # Must be False because Django needs JS access for handling forms
+SESSION_COOKIE_HTTPONLY = True  # Prevent JS from stealing session cookie
+
+
 
 # 7. CSRF trusted origins (adjust to your domain)
 CSRF_TRUSTED_ORIGINS = [
@@ -54,6 +67,8 @@ CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com")
 CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com")
 
 ALLOWED_HOSTS = []
+
+
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Application definition
