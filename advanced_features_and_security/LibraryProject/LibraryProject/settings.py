@@ -15,6 +15,9 @@ import os
 
 #Force all connections to HTTPS
 SECURE_SSL_REDIRECT = True  # Redirect HTTP → HTTPS
+# Trust the X-Forwarded-Proto header when behind a proxy (needed for HTTPS setups)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 #Ensure cookies are only sent over HTTPS (production only)
 SESSION_COOKIE_SECURE = True
