@@ -3,8 +3,14 @@ from .serializers import BookSerializer
 from rest_framework import generics
 
 class BookList(generics.ListCreateAPIView):
-    queryset = Book.objects.all()
     serializer_class = BookSerializer
+    
+    def get_queryset(self):
+        queryset = Book.objects.all()
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            queryset = queryset.filter(title__icontains=search)
+        return queryset
 
 class BookUpdate(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
