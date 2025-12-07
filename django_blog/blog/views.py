@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm,UserProfileUpdateForm, ProfileForm
-from django.views.generic import CreateView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import CustomUserCreationForm, UserProfileUpdateForm, ProfileForm
+from django.contrib.auth.models import User
+from .models import Profile
 from django.views import View
 
 class RegisterView(CreateView):
@@ -14,6 +18,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
     template_name = 'blog/profile.html'
 
     def get(self, request):
+        """Handle GET request - display profile form"""
         user_form = UserProfileUpdateForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
         return render(request, self.template_name, {
@@ -22,6 +27,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
         })
 
     def post(self, request):
+        """Handle POST request - update profile"""
         user_form = UserProfileUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
 
