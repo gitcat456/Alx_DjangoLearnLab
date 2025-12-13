@@ -1,4 +1,3 @@
-# accounts/views.py
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,6 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import login, logout
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
 from .models import CustomUser
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class UserRegistrationView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -91,3 +94,41 @@ class FollowUserView(APIView):
         else:
             request.user.followers.add(user_to_follow)
             return Response({'message': f'Following {user_to_follow.username}'}, status=status.HTTP_200_OK)
+        
+        
+        
+class FollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Follow a user"""
+        try:
+            user_to_follow = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+        
+        if request.user == user_to_follow:
+            return Response({'error': 'Cannot follow yourself'}, status=400)
+        
+        if user_to_follow in request.user.following.all():
+            return Response({'error': 'Already following this user'}, status=400)
+        
+        request.user.following.add(user_to_follow)
+        return Response({'message': f'Now following {user_to_follow.username}'}, status=200)
+
+
+class UnfollowUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Unfollow a user"""
+        try:
+            user_to_unfollow = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=404)
+        
+        if user_to_unfollow not in request.user.following.all():
+            return Response({'error': 'Not following this user'}, status=400)
+        
+        request.user.following.remove(user_to_unfollow)
+        return Response({'message': f'Unfollowed {user_to_unfollow.username}'}, status=200)
