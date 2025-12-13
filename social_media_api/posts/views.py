@@ -1,10 +1,12 @@
 from rest_framework import viewsets, permissions, filters
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
+from notifications.models import Notification
+from django.contrib.contenttypes.models import ContentType
 
 class StandardPagination(PageNumberPagination):
     page_size = 10
@@ -27,6 +29,41 @@ class PostViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+        
+      
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def like(self, request, pk=None):
+        post = self.get_object()
+        user = request.user
+        
+        # Check if already liked
+        like, created = Like.objects.get_or_create(user=user, post=post)
+        
+        if created:
+            # Create notification for post owner
+            if post.author != user:  # Don't notify yourself
+                Notification.objects.create(
+                    recipient=post.author,
+                    actor=user,
+                    verb="liked your post",
+                    content_type=ContentType.objects.get_for_model(post),
+                    object_id=post.id
+                )
+            return Response({'message': 'Post liked'}, status=201)
+        else:
+            return Response({'message': 'Already liked'}, status=400)
+    
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
+    def unlike(self, request, pk=None):
+        post = self.get_object()
+        user = request.user
+        
+        try:
+            like = Like.objects.get(user=user, post=post)
+            like.delete()
+            return Response({'message': 'Post unliked'}, status=200)
+        except Like.DoesNotExist:
+            return Response({'message': 'Not liked yet'}, status=400)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
