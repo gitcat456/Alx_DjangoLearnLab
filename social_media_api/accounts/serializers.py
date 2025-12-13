@@ -75,3 +75,14 @@ class UserLoginSerializer(serializers.Serializer):
                 return data
             raise serializers.ValidationError("Invalid credentials.")
         raise serializers.ValidationError("Must provide username and password.")
+    
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+    followers_count = serializers.IntegerField(read_only=True)
+    following_count = serializers.IntegerField(read_only=True)
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'bio', 
+                  'profile_picture', 'followers_count', 'following_count')
+        read_only_fields = ('id', 'username', 'email', 'followers_count', 'following_count')
