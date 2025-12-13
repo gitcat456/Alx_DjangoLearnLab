@@ -9,6 +9,7 @@ from .models import CustomUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from rest_framework import generics
 User = get_user_model()
 
 class UserRegistrationView(APIView):
@@ -132,3 +133,60 @@ class UnfollowUserView(APIView):
         
         request.user.following.remove(user_to_unfollow)
         return Response({'message': f'Unfollowed {user_to_unfollow.username}'}, status=200)
+    
+    
+
+class FollowUserView(generics.GenericAPIView):  # Use generics.GenericAPIView
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Follow a user"""
+        try:
+            user_to_follow = User.objects.get(id=user_id)  # Using User model
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if request.user == user_to_follow:
+            return Response({'error': 'Cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if user_to_follow in request.user.following.all():
+            return Response({'error': 'Already following this user'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.following.add(user_to_follow)
+        return Response({'message': f'Now following {user_to_follow.username}'}, status=status.HTTP_200_OK)
+
+
+class UnfollowUserView(generics.GenericAPIView):  # Use generics.GenericAPIView
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Unfollow a user"""
+        try:
+            user_to_unfollow = User.objects.get(id=user_id)  # Using User model
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if user_to_unfollow not in request.user.following.all():
+            return Response({'error': 'Not following this user'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.following.remove(user_to_unfollow)
+        return Response({'message': f'Unfollowed {user_to_unfollow.username}'}, status=status.HTTP_200_OK)
+
+
+# Optional: Add this if you want to list all users to follow
+class UserListView(generics.ListAPIView):
+    """List all users (for finding users to follow)"""
+    queryset = User.objects.all()  # This satisfies CustomUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def list(self, request):
+        users = User.objects.all()
+        data = []
+        for user in users:
+            if user != request.user:  # Don't show current user
+                data.append({
+                    'id': user.id,
+                    'username': user.username,
+                    'is_following': user in request.user.following.all()
+                })
+        return Response(data)
