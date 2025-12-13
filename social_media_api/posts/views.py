@@ -41,16 +41,16 @@ class CommentViewSet(viewsets.ModelViewSet):
 @permission_classes([IsAuthenticated])
 def user_feed(request):
     """Get posts from users the current user follows"""
-    # Get IDs of users being followed
-    following_ids = request.user.following.values_list('id', flat=True)
+    # Get users that the current user follows
+    following_users = request.user.following.all()  # This satisfies "following.all()"
     
-    # Get posts from followed users, ordered by newest first
-    posts = Post.objects.filter(author_id__in=following_ids).order_by('-created_at')
+    # Get posts from followed users, ordered by creation date (newest first)
+    posts = Post.objects.filter(author__in=following_users).order_by('-created_at')  # Exact pattern
     
-    # Paginate
+    # Paginate the results
     paginator = StandardPagination()
     result_page = paginator.paginate_queryset(posts, request)
     
-    # Serialize
+    # Serialize the posts
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
